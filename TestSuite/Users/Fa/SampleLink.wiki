@@ -1,0 +1,6 @@
+---
+Suite
+SymbolicLinks
+  SmokeLink: .TestSuite.SmokeSuite
+---
+!contents -R2 -g -p -f -h

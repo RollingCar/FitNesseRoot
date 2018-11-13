@@ -1,0 +1,22 @@
+!1 Test suite X
+
+!contents -R2 -g -p -f -h
+
+
+
+
+
+
+#test vars
+!define at701 {ec2-52-43-100-136.us-west-2.compute.amazonaws.com}
+!define host {127.0.0.1}
+!define browseEndPoint {http://${host}:8085/}
+!define prefix {rest/banner?}
+!define key {slYKZ-msM9w7oTfxfBKLA1i0sO33_kz9S1AFuGalCiuyrhnGeEKa7A..}
+
+#system vars
+!path /media/ephemeral0/fa/Fitnesse/atTest1-1.0-SNAPSHOT-jar-with-dependencies.jar
+!define TEST_SYSTEM {slim} 
+
+#other variables
+!define BAR {!-|-!}
