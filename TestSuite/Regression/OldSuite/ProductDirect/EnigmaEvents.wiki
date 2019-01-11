@@ -1,0 +1,46 @@
+---
+Test
+---
+!3 build curl and impression link for testing 
+!| com.groundtruth.test.Requestor.AdRequestor|${atlanticServerQA}                                                                                                                                                                                                   |
+|testTitle                                   |getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|getImpressionLink?|browseEndPoint   |prefix   |key   |latitude |longitude          |zip  |appId        |o_fmt    |size  |pt |carrier|os     |
+|build Curl for tests                        |true          |200               |71986        |901           |$curl=    |$impressionLink=  |${browseEndPoint}|${prefix}|${key}|47.614104|-122.32837899999998|98101|skout_android|html5,exp|320x50|app|Wifi   |Android|
+
+!3 Ad Request field verificatoin
+!| com.groundtruth.test.Requestor.EnigmaEventsLogRequestor                            |${atlanticServerQA}                                                                                       |
+|testTitle                                                                            |testId|getEnigmaEventsLog?|getFieldValue?     |getAdGroupId?|getCampaignId?|fieldToCheck            |curl |
+|Fire adrequest, verify app_id from enigma_event AdRequest--> Should return ad        |1     |true               |mopub_privexch411ws|71986        |901           |AdRequest.app_id        |$curl|
+|Fire adrequest, verify O_fmt from enigma_event AdRequest--> Should return ad         |2     |true               |exp,html5          |71986        |901           |AdRequest.o_fmt         |$curl|
+|Fire adrequest, verify req_ad_size from enigma_event AdRequest--> Should return ad   |3     |true               |320x50             |71986        |901           |AdRequest.req_ad_size   |$curl|
+|Fire adrequest, verify request_filled from enigma_event AdRequest--> Should return ad|6     |true               |FILLED             |71986        |901           |AdRequest.request_filled|$curl|
+|Fire adrequest, verify HTTP_vendor from enigma_event AdRequest--> Should return ad   |10    |true               |neptunenormandy    |71986        |901           |AdRequest.HTTP_vendor   |$curl|
+|Fire adrequest, verify listing_vendor from enigma_event AdRequest--> Should return ad|11    |true               |neptune_direct     |71986        |901           |AdRequest.listing_vendor|$curl|
+
+!3 Http Vendor Stats field verification
+!| com.groundtruth.test.Requestor.EnigmaEventsLogRequestor                                             |${atlanticServerQA}                                                                                                   |
+|testTitle                                                                                             |testId|getEnigmaEventsLog?|getFieldValue?|getAdGroupId?|getCampaignId?|fieldToCheck                             |curl |
+|Fire adrequest, verify num_returned_from_vendor from enigma_event HttpVendorStats--> Should return ad |12    |true               |1             |71986        |901           |HttpVendorStats.num_returned_from_vendor |$curl|
+|Fire adrequest, verify num_returned_to_publisher from enigma_event HttpVendorStats--> Should return ad|13    |true               |1             |71986        |901           |HttpVendorStats.num_returned_to_publisher|$curl|
+
+!3 Ad Details field verification
+!| com.groundtruth.test.Requestor.EnigmaEventsLogRequestor                          |${atlanticServerQA}                                                                                 |
+|testTitle                                                                          |testId|getEnigmaEventsLog?|getFieldValue?|getAdGroupId?|getCampaignId?|fieldToCheck           |curl |
+|Fire adrequest, verify ad_id from enigma_event AdDetails--> Should return ad       |14    |true               |71986         |71986        |901           |AdDetails.ad_id        |$curl|
+|Fire adrequest, verify adv bid rate from enigma_event AdDetails--> Should return ad|15    |true               |0.01          |71986        |901           |AdDetails.adv_bid_rates|$curl|
+|Fire adrequest, verify pub bid rate from enigma_event AdDetails--> Should return ad|16    |true               |0.02          |71986        |901           |AdDetails.pub_bid_rates|$curl|
+|Fire adrequest, verify campaign_id from enigma_event AdDetails--> Should return ad |17    |true               |901           |71986        |901           |AdDetails.campaign_id  |$curl|
+|Fire adrequest, verify creative id from enigma_event AdDetails--> Should return ad |18    |true               |71773         |71986        |901           |AdDetails.creative_id  |$curl|
+|Fire adrequest, verify adomain from enigma_event AdDetails--> Should return ad     |19    |true               |atlantic.com  |71986        |901           |AdDetails.adomain      |$curl|
+
+!3 Ad Tracking Field Verification
+!| com.groundtruth.test.Requestor.EnigmaEventsLogRequestor                                        |${atlanticServerQA}                                                                 |
+|testTitle                                                                                        |testId|getEnigmaEventsLog?|getFieldValue?|fieldToCheck          |notificationLinkUrl|
+|Fire adrequest, verify action_type=AD_IMPRESSION from enigma_event AdTracking--> Should return ad|21    |true               |AD_IMPRESSION |AdTracking.action_type|$impressionLink    |
+|Fire adrequest, verify xad_revenue from enigma_event AdTracking--> Should return ad              |22    |true               |0.01          |AdTracking.xad_revenue|$impressionLink    |
+
+#to do add 23 24 to count AdDetails and Adtracking returned
+
+
+
+
+
