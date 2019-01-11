@@ -8,11 +8,14 @@
 
 
 #test vars
-!define at701 {ec2-52-43-100-136.us-west-2.compute.amazonaws.com}
+!define atlanticServerQA {ec2-34-222-246-40.us-west-2.compute.amazonaws.com}
+
 !define host {127.0.0.1}
-!define browseEndPoint {http://${host}:8085/}
-!define prefix {rest/banner?}
+!define browseEndPoint {http://${host}:8085}
+!define prefix {/rest/banner?}
 !define key {slYKZ-msM9w7oTfxfBKLA1i0sO33_kz9S1AFuGalCiuyrhnGeEKa7A..}
+
+!define postPrefixMopub23 {/exchange/mopub23}
 
 #system vars
 !path /media/ephemeral0/fa/Fitnesse/atTest1-1.0-SNAPSHOT-jar-with-dependencies.jar

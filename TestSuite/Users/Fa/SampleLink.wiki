@@ -4,3 +4,5 @@ SymbolicLinks
   SmokeLink: .TestSuite.SmokeSuite
 ---
 !contents -R2 -g -p -f -h
+
+!define browseEndpoint {11}
