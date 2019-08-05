@@ -1,25 +1,23 @@
-!1 Test suite X
-
+!1 Test suite
 !contents -R2 -g -p -f -h
 
-
-
-
-
-
-#test vars
-!define atlanticServerQA {ec2-34-222-246-40.us-west-2.compute.amazonaws.com}
-
+!3 test vars
+!define atlanticServerQA {ec2-34-214-215-38.us-west-2.compute.amazonaws.com}
+!define cpvAtlanticServerQA {ec2-34-222-246-40.us-west-2.compute.amazonaws.com}
 !define host {127.0.0.1}
 !define browseEndPoint {http://${host}:8085}
 !define prefix {/rest/banner?}
 !define key {slYKZ-msM9w7oTfxfBKLA1i0sO33_kz9S1AFuGalCiuyrhnGeEKa7A..}
-
 !define postPrefixMopub23 {/exchange/mopub23}
+#constant vars
 
-#system vars
-!path /media/ephemeral0/fa/Fitnesse/atTest1-1.0-SNAPSHOT-jar-with-dependencies.jar
-!define TEST_SYSTEM {slim} 
+#!define Today {!today (yyyy-MM-dd)}
+#!define Yesterday {!today (yyyy-MM-dd) -1}
+#!define  After_7Days {!today (yyyy-MM-dd) +7}
 
-#other variables
+!3 system vars
+!path /media/ephemeral0/fa/Fitnesse/testJar/atTest1-1.0-SNAPSHOT-jar-with-dependencies.jar
+!define TEST_SYSTEM {slim}
+
+!3 other variables
 !define BAR {!-|-!}

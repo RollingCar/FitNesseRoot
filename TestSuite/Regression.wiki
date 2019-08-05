@@ -2,3 +2,5 @@
 Suite
 ---
 !contents -R2 -g -p -f -h
+
+!define timeoutEnigma {2000}

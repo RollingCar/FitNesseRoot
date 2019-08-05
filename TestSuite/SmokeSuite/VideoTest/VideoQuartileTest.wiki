@@ -1,8 +1,0 @@
-!|com.groundtruth.test.Requestor.AdRequestor|${at701}                                                                                                                                                                                                        |
-|testId                                     |testTitle |getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|getCurl?|browseEndPoint   |prefix   |key   |latitude         |longitude          |zip  |o_fmt|vlinearity|vmin|vmax|vprotocol|vmime    |
-|1                                          |video test|true          |200               |72655        |901           |$curl1= |${browseEndPoint}|${prefix}|${key}|47.60928699999999|-122.32465289999999|98104|video|1         |1   |30  |5        |video/mp4|
-
-
-!|com.groundtruth.test.Requestor.DemandAccessLogRequestor|${at701}                                                                               |
-|testId                                                  |testTitle |getDemandAccessLogs?|getFirstQuartile?|getMidPoint?|getThirdQuartile?|curl  |
-|1                                                       |check logs|true                |true             |true        |true             |$curl1|
