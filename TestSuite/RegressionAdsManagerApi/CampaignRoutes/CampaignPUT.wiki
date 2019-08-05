@@ -1,0 +1,50 @@
+---
+Test
+---
+## Dynamic Date Info
+
+| com.groundtruth.test.Util.Gadget.TimeGetter |
+| getDate? | daysToAdd | hoursToAdd | minutesToAdd |
+| $Today= | | -7 | |
+| $After_7Days= | 7 | -7 | |
+| $Yesterday= | -1 | -7 | |
+
+## Setup Test Data
+
+!3 Test setup
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | payload |
+| create campaign to be deleted | TS-1 | true | 200 | $deletedCampaignId= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Deleted Campaign PUT"} |
+| create active campaign | TS-2 | true | 200 | $activeCampaignId= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Active Campaign PUT"} |
+| create another active campaign | TS-3 | true | 200 | $activeCampaignId2= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Active Campaign PUT Dupe"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete campaign to be deleted | TS-4 | true | 200 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |
+
+## Test PUT
+
+!3 Tests
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | addon | getStart_date? | getEnd_date? | getName? | getStatus_id? | getStatus_name? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | payload |
+| campaign put: id not given | 1 | true | 405 | The method is not allowed for the requested URL. | | /campaigns | | | | | | | put | | ${browseEndPoint} | /api | | {"name":"No ID given"} |
+| campaign put: campaign deleted | 2 | true | 400 | This campaign could not be changed | | | | | | | | | put | | ${browseEndPoint} | /api | $deletedCampaignId | {"name":"Deleted Campaign PUT"} |
+| campaign put: campaign in different account | 3 | true | 400 | This campaign could not be changed | | | | | | | | | put | | ${browseEndPoint} | /api | ${campaignInDifferentAccount} | {"name":"Campaign in different account"} |
+| campaign put: campaign in different tenant | 4 | true | 400 | This campaign could not be changed | | | | | | | | | put | | ${browseEndPoint} | /api | ${campaignInDifferentTenant} | {"name":"Campaign in different tenant"} |
+| campaign put: campaign id doesn't exist | 5 | true | 400 | This campaign could not be changed | | | | | | | | | put | | ${browseEndPoint} | /api | ${nonexistentCampaignId} | {"name":"Campaign id doesn't exist"} |
+| campaign put: campaign id invalid | 6 | false | 404 | | | | | | | | | | put | | ${browseEndPoint} | /api | ${invalidCampaignId} | {"name":"Campaign id invalid"} |
+| campaign put: unique campaign name | 7 | true | 200 | | $activeCampaignId | | $Today | $After_7Days | Campaign id valid PUT | 1 | active | | put | | ${browseEndPoint} | /api | $activeCampaignId | {"name":"Campaign id valid PUT"} |
+| campaign put: duplicate campaign name | 8 | true | 400 | | | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | {"name":"Active Campaign PUT Dupe"} |
+| campaign put: campaign id valid, no name given | 9 | true | 400 | Input payload validation failed | | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | {} |
+| campaign put: campaign name = 256 characters | 10 | true | 200 | | $activeCampaignId | | $Today | $After_7Days | bHfJ3um7GnvbDgDe0DcRDhHdybLEvUcAqb6q2vus9mCpEJAOGG168EEnbSUvUrcMtLsbxdtwTjIwZGCEUrLGLUw81epbkqVwHzFbWq0D90vzj1jIyxl9Lf4W04vtQtAsZrm7A90gOy3lAp48tSa83BjAxkcSlH17Wx625HNoQU3tRIKmGm5PjZjJQxOGdTUdeSInbyCDTE18XIKeXvVqhIUfRseNKBwVR7NxupGiRIbJNzJjOqRxmoaBH3Hb0cIr | 1 | active | | put | | ${browseEndPoint} | /api | $activeCampaignId | {"name":"bHfJ3um7GnvbDgDe0DcRDhHdybLEvUcAqb6q2vus9mCpEJAOGG168EEnbSUvUrcMtLsbxdtwTjIwZGCEUrLGLUw81epbkqVwHzFbWq0D90vzj1jIyxl9Lf4W04vtQtAsZrm7A90gOy3lAp48tSa83BjAxkcSlH17Wx625HNoQU3tRIKmGm5PjZjJQxOGdTUdeSInbyCDTE18XIKeXvVqhIUfRseNKBwVR7NxupGiRIbJNzJjOqRxmoaBH3Hb0cIr"} |
+| campaign put: campaign name > 256 characters | 11 | true | 400 | Input payload validation failed | | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | {"name":"1bHfJ3um7GnvbDgDe0DcRDhHdybLEvUcAqb6q2vus9mCpEJAOGG168EEnbSUvUrcMtLsbxdtwTjIwZGCEUrLGLUw81epbkqVwHzFbWq0D90vzj1jIyxl9Lf4W04vtQtAsZrm7A90gOy3lAp48tSa83BjAxkcSlH17Wx625HNoQU3tRIKmGm5PjZjJQxOGdTUdeSInbyCDTE18XIKeXvVqhIUfRseNKBwVR7NxupGiRIbJNzJjOqRxmoaBH3Hb0cIr"} |
+#| campaign put: campaign name has Japanese characters | 12 | true | 200 | | $activeCampaignId | | $Today | $After_7Days | Active Campaign PUT 伊豆の国市 静岡県 | 1 | active | | put | | ${browseEndPoint} | /api | $activeCampaignId | {"name":"Active Campaign PUT 伊豆の国市 静岡県"} |
+
+## Tear Down Test Data
+
+!3 Test Teardown
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete campaign to be deleted | TD-1 | true | 400 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |
+| delete active campaign | TD-2 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId |
+| delete second active campaign | TD-3 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId2 |

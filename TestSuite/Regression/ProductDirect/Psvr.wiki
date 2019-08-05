@@ -1,0 +1,13 @@
+---
+Test
+---
+!3 build query for demand access log
+!|com.groundtruth.test.Atlantic.Requestor.AdRequestor  |${atlanticServerQA}                                                                                                                                                                                      |
+|testTitle                                             |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude  |longitude   |zip  |o_fmt    |size  |pt |uid                       |carrier|
+|build query for demand access log --> Should return ad|1     |true          |200               |72786        |901           |$curl=    |${browseEndPoint}|${prefix}|${key}|47.6482671|-122.3780329|98119|html5,exp|320x50|app|atlantic_test_SVR_age_2000|Wifi   |
+
+
+!3 tagSvr verification
+!| com.groundtruth.test.Atlantic.Requestor.DemandAccessLogRequestor|${atlanticServerQA}                                       |
+|testId                                                            |testTitle   |getDemandAccessLogs?|getTagSvr?        |curl |
+|11                                                                |check tagSvr|true                |"tagSvr":{"1":0.5}|$curl|

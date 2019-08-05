@@ -1,0 +1,132 @@
+#1 POST/campaigns
+
+#2 POST/campaigns/{campaign_id}/adgroups
+
+#3 POST/campaigns/{campaign_id}/adgroups/{adgroup_id}/creatives
+
+#4 PUT/campaigns/{campaign_id}/adgroups/{adgroup_id}/creatives/{creative_id}
+
+#5 PUT/campaigns/{campaign_id}/adgroups/{adgroup_id}/creatives/{creative_id}/status
+
+#6 PUT/campaigns/{campaign_id}/adgroups/{adgroup_id}/status
+
+#7 PUT/campaigns/{campaign_id}/adgroups/{adgroup_id}/budget
+
+#8 PUT/campaigns/{campaign_id}/adgroups/{adgroup_id}/product
+
+#9 PUT/campaigns/{campaign_id}/adgroups/{adgroup_id}
+
+#10 PUT/campaigns/{campaign_id}
+
+#11 PUT/campaigns/{campaign_id}/status
+
+#12 GET/campaigns/{campaign_id}/adgroups/{adgroup_id}/creatives/{creative_id}
+
+#13 GET/campaigns/{campaign_id}/adgroups/{adgroup_id}/creatives
+
+#14 GET/campaigns/{campaign_id}/adgroups/{adgroup_id}/budget
+
+#15 GET/campaigns/{campaign_id}/adgroups/{adgroup_id}
+
+#16 GET/campaigns/{campaign_id}/adgroups
+
+#17 GET/campaigns/{campaign_id}
+
+#18 GET/campaigns
+
+#19 DELETE/campaigns/{campaign_id}/adgroups/{adgroup_id}/creatives/{creative_id}
+
+#20 DELETE/campaigns/{campaign_id}/adgroups/{adgroup_id}
+
+#21 DELETE/campaigns/{campaign_id}
+
+| com.groundtruth.test.Util.Gadget.TimeGetter |
+| getDate? | daysToAdd | hoursToAdd | minutesToAdd |
+| $Today= | | -7 | |
+| $After_7Days= | 7 | -7 | |
+| $Yesterday= | -1 | -7 | |
+
+!3 Tests
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getMessage? | getName? | getUrl? | getStatus_id? | method | headers | browseEndPoint | apiPrefix | addon | payload |
+| Campaign POST | 1 | true | 200 | $campaignId= | | Trafficking API Smoke Test Campaign | | 1 | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Trafficking API Smoke Test Campaign"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | getName? | addon | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | payload |
+| Adgroup POST | 2 | true | 200 | | $adgroupId= | Trafficking API Smoke Test Adgroup | /adgroups | | post | | ${browseEndPoint} | /api | $campaignId | {"name":"Trafficking API Smoke Test Adgroup"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | getName? | getStatus_id? | getStatus_name? | getType? | getSize? | getBanner_image_url? | getClick_through_url? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | addon | payload |
+| Creative POST | 3 | true | 200 | | $creativeId= | Trafficking API Smoke Test Creative | 1 | active | image | 320x50 | https://cf.groundtruth.com/swift/2019/6/13/27f9c61b-3800-46f5-a693-d221ebdc03a5.jpg | https://ads-qa3.groundtruth.com/ | | post | | ${browseEndPoint} | /api | $campaignId | $adgroupId | /creatives | {"name":"Trafficking API Smoke Test Creative", "type":"image", "size":"320x50", "banner_image_url":"https://cf.groundtruth.com/swift/2019/6/13/27f9c61b-3800-46f5-a693-d221ebdc03a5.jpg", "click_through_url":"https://ads-qa3.groundtruth.com"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | getName? | getStatus_id? | getStatus_name? | getType? | getSize? | getBanner_image_url? | getClick_through_url? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | creativeId | payload |
+| Creative PUT | 4 | true | 200 | | $creativeId | Trafficking API Smoke Test Creative | 1 | active | image | 320x50 | https://cf.groundtruth.com/swift/2019/6/13/27f9c61b-3800-46f5-a693-d221ebdc03a5.jpg | https://www.google.com/ | | put | | ${browseEndPoint} | /api | $campaignId | $adgroupId | $creativeId | {"name":"Trafficking API Smoke Test Creative", "type":"image", "size":"320x50", "banner_image_url":"https://cf.groundtruth.com/swift/2019/6/13/27f9c61b-3800-46f5-a693-d221ebdc03a5.jpg", "click_through_url":"https://www.google.com"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | getName? | getStatus_id? | getStatus_name? | getType? | getSize? | getBanner_image_url? | getClick_through_url? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | creativeId | addon | payload |
+| Creative PUT Status | 5 | true | 200 | | $creativeId | Trafficking API Smoke Test Creative | 2 | paused | image | 320x50 | https://cf.groundtruth.com/swift/2019/6/13/27f9c61b-3800-46f5-a693-d221ebdc03a5.jpg | https://www.google.com/ | | put | | ${browseEndPoint} | /api | $campaignId | $adgroupId | $creativeId | /status | {"status": 2 } |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | getName? | getStatus_id? | getStatus_name? | getOptimization_strategy? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | addon | payload |
+| Adgroup PUT Status | 6 | true | 200 | | $adgroupId | Trafficking API Smoke Test Adgroup | 2 | paused | click | | put | | ${browseEndPoint} | /api | $campaignId | $adgroupId | /status | {"status": 2 } |
+
+| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | addon | getBid_type? | getBudget? | getDay_parting? | getBid_price? | getStart_date? | getEnd_date? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | payload |
+| Campaigns/Adgroups/Budget PUT | 7 | true | 200 | | /budget | cpm | 100.0 | | 3.5 | $Today | $After_7Days | | put | | ${browseEndPoint} | /api | $campaignId | $adgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | addon | getProduct_type? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | payload |
+| Campaigns/Adgroups/Product PUT | 8 | true | 200 | | $adgroupId | /product | audience | | put | | ${browseEndPoint} | /api | $campaignId | $adgroupId | {"product_type":"audience"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | getName? | getOptimization_strategy? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | payload |
+| Adgroup PUT | 9 | true | 200 | | $adgroupId | Trafficking API Smoke Test Adgroup | delivery | | put | | ${browseEndPoint} | /api | $campaignId | $adgroupId | {"name":"Trafficking API Smoke Test Adgroup", "targeting":{"audience": [{"type":"behavior","id":"soccermoms"}]}, "optimization_strategy":"delivery"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getMessage? | getName? | getUrl? | getStatus_id? | method | headers | browseEndPoint | apiPrefix | campaignId | payload |
+| Campaign PUT | 10 | true | 200 | $campaignId | | Trafficking API Smoke Test Campaign Renamed | | 1 | put | | ${browseEndPoint} | /api | $campaignId | {"name": "Trafficking API Smoke Test Campaign Renamed"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | getName? | getStatus_id? | getStatus_name? | getStart_date? | getEnd_date? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | addon | payload |
+| Campaign PUT Status | 11 | true | 200 | | $campaignId | Trafficking API Smoke Test Campaign Renamed | 2 | paused | $Today | $After_7Days | | put | | ${browseEndPoint} | /api | $campaignId | /status | {"status": 2 } |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | getName? | getStatus_id? | getStatus_name? | getType? | getSize? | getBanner_image_url? | getClick_through_url? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | creativeId |
+| Creative GET | 12 | true | 200 | | $creativeId | Trafficking API Smoke Test Creative | 2 | paused | image | 320x50 | https://cf.groundtruth.com/swift/2019/6/13/27f9c61b-3800-46f5-a693-d221ebdc03a5.jpg | https://www.google.com/ | | get | | ${browseEndPoint} | /api | $campaignId | $adgroupId | $creativeId |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | addon |
+| Creatives GET | 13 | true | 200 | | | get | | ${browseEndPoint} | /api | $campaignId | $adgroupId | /creatives |
+
+| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | addon | getBid_type? | getBudget? | getDay_parting? | getBid_price? | getStart_date? | getEnd_date? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId |
+| Campaigns/Adgroups/Budget GET | 14 | true | 200 | | /budget | cpm | 100.0 | | 3.5 | $Today | $After_7Days | | get | | ${browseEndPoint} | /api | $campaignId | $adgroupId |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | getName? | getStatus_id? | getStatus_name? | getOptimization_strategy? | getStart_date? | getEnd_date? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId |
+| Adgroup GET | 15 | true | 200 | | $adgroupId | Trafficking API Smoke Test Adgroup | 2 | paused | delivery | $Today | $After_7Days | | get | | ${browseEndPoint} | /api | $campaignId | $adgroupId |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | campaignId |
+| Adgroups GET | 16 | true | 200 | | | get | | ${browseEndPoint} | /api | /adgroups | $campaignId |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getMessage? | getName? | getStatus_id? | getStatus_name? | getStart_date? | getEnd_date? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| Campaign GET | 17 | true | 200 | $campaignId | | Trafficking API Smoke Test Campaign Renamed | 2 | paused | $Today | $After_7Days | | get | | ${browseEndPoint} | /api | $campaignId |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon |
+| Campaigns GET | 18 | true | 200 | | | get | | ${browseEndPoint} | /api | /campaigns |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | creativeId |
+| Creative DELETE | 19 | true | 200 | | delete | | ${browseEndPoint} | /api | $campaignId | $adgroupId | $creativeId |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId |
+| Adgroup DELETE | 20 | true | 200 | | delete | | ${browseEndPoint} | /api | $campaignId | $adgroupId |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| Campaign DELETE | 21 | true | 200 | | delete | | ${browseEndPoint} | /api | $campaignId |

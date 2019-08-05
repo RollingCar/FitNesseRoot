@@ -1,0 +1,66 @@
+---
+Test
+---
+## Dynamic Date
+
+| com.groundtruth.test.Util.Gadget.TimeGetter |
+| getDate? | daysToAdd | hoursToAdd | minutesToAdd |
+| $Today= | | -7 | |
+| $After_7Days= | 7 | -7 | |
+| $Yesterday= | -1 | -7 | |
+
+!3 Test setup
+#todo:  add campaign and adgroup with Japanese characters in name
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | payload |
+| create campaign to be deleted | TS-1 | true | 200 | $deletedCampaignId= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Deleted Campaign"} |
+| create active campaign 1 | TS-2 | true | 200 | $activeCampaignId1= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Active Campaign 1"} |
+| create active campaign 2 | TS-3 | true | 200 | $activeCampaignId2= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Active Campaign 2"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | campaignId | payload |
+| add adgroup to campaign to be deleted | TS-4 | true | 200 | $adgroupInDeletedCampaign= | | post | | ${browseEndPoint} | /api | /adgroups | $deletedCampaignId | {"name":"Adgroup in Deleted Campaign"} |
+| add adgroup 1 (geotarget) | TS-5 | true | 200 | $activeAdgroupId1= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId1 | {"name":"Adgroup in with geotarget targeting"} |
+| add adgroup 2 (audience) | TS-6 | true | 200 | $activeAdgroupId2= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId1 | {"name":"Adgroup in with audience targeting"} |
+| add adgroup to be deleted | TS-7 | true | 200 | $deletedAdgroupId= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId1 | {"name":"Adgroup to be deleted"} |
+| add adgroup to other active campaign | TS-8 | true | 200 | $activeAdgroupIdOtherCampaign= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId2 | {"name":"Adgroup in another campaign"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | addon | getProduct_type? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | payload |
+| product_type = "audience" | TS-9 | true | 200 | | | /product | audience | | put | | ${browseEndPoint} | /api | $activeCampaignId1 | $activeAdgroupId2 | {"product_type":"audience"} |
+| product_type = "geotargeting" | TS-10 | true | 200 | | | /product | geotargeting | | put | | ${browseEndPoint} | /api | $activeCampaignId1 | $activeAdgroupId1 | {"product_type":"geotargeting"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete campaign to be deleted | TS-8 | true | 200 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId |
+| delete adgroup to be deleted | TS-9 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId1 | $deletedAdgroupId |
+
+!3 Tests
+#todo:  test for adgroup with Japanese characters
+
+| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | getName? | getStatus_id? | getStatus_name? | getOptimization_strategy? | getStart_date? | getEnd_date? | getProduct_type? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | campaignId | adgroupId |
+| Adgroup with geotarget | 1 | true | 200 | | $activeAdgroupId1 | Adgroup in with geotarget targeting | 2 | paused | click | $Today | $After_7Days | geotargeting | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | $activeAdgroupId1 |
+| Adgroup with audience | 2 | true | 200 | | $activeAdgroupId2 | Adgroup in with audience targeting | 2 | paused | click | $Today | $After_7Days | audience | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | $activeAdgroupId2 |
+| Deleted Campaign | 3 | true | 400 | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $deletedCampaignId | $adgroupInDeletedCampaign |
+| Deleted Adgroup | 4 | true | 400 | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | $deletedAdgroupId |
+| Campaign in different Account | 5 | true | 400 | | | | | | | | | | | get | | ${browseEndPoint} | /api | | ${campaignInDifferentAccount} | ${adgroupInDifferentAccount} |
+| Campaign in different Tenant | 6 | true | 400 | | | | | | | | | | | get | | ${browseEndPoint} | /api | | ${campaignInDifferentTenant} | ${adgroupInDifferentTenant} |
+| Invalid Campaign ID | 7 | false | 404 | | | | | | | | | | | get | | ${browseEndPoint} | /api | | ${invalidCampaignId} | $activeAdgroupId2 |
+| Nonexistent Campaign ID | 8 | true | 400 | | | | | | | | | | | get | | ${browseEndPoint} | /api | | ${nonexistentCampaignId} | $activeAdgroupId2 |
+| Campaign ID not given | 9 | false | 404 | | | | | | | | | | | get | | ${browseEndPoint} | /api | /campaigns//adgroups/$activeAdgroupId1 | | |
+| Invalid Adgroup ID | 10 | false | 404 | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | ${invalidCampaignId} |
+| Nonexistent Adgroup ID | 11 | true | 400 | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | ${nonexistentCampaignId} |
+| Adgroup ID not given | 12 | false | 404 | | | | | | | | | | | get | | ${browseEndPoint} | /api | /campaigns/$activeCampaignId1/adgroups/ | | |
+| Adgroup belongs to different campaign | 13 | true | 400 | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $activeCampaignId2 | $activeAdgroupId2 |
+
+!3 Test Teardown
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete campaign to be deleted | TD-1 | true | 400 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |
+| delete active campaign 1 | TD-2 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId1 |
+| delete active campaign 2 | TD-3 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId2 |

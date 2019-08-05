@@ -1,0 +1,13 @@
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon |
+| static route brands GET | 1 | true | 200 | | get | | ${browseEndPoint} | /api | /static/targeting/brands |
+| static route states GET | 2 | true | 200 | | get | | ${browseEndPoint} | /api | /static/targeting/states |
+| static route segments  GET | 3 | true | 200 | | get | | ${browseEndPoint} | /api | /static/targeting/segments |
+| static route carriers  GET | 4 | true | 200 | | get | | ${browseEndPoint} | /api | /static/targeting/carriers |
+| static route location_groups GET | 5 | true | 200 | | get | | ${browseEndPoint} | /api | /static/targeting/location_groups |
+| static route behavior_audiences GET | 6 | true | 200 | | get | | ${browseEndPoint} | /api | /static/targeting/behavior_audiences |
+| static route categories GET | 7 | true | 200 | | get | | ${browseEndPoint} | /api | /static/targeting/categories |
+| static route dmas GET | 8 | true | 200 | | get | | ${browseEndPoint} | /api | /static/targeting/dmas |
+| static route cities GET | 9 | true | 200 | | get | | ${browseEndPoint} | /api | /static/targeting/cities |
+| static route publisher_categories GET | 10 | true | 200 | | get | | ${browseEndPoint} | /api | /static/targeting/publisher_categories |
+| static route custom_audiences GET | 11 | true | 200 | | get | | ${browseEndPoint} | /api | /static/targeting/custom_audiences |

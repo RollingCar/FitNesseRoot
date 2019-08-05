@@ -1,0 +1,21 @@
+---
+Test
+---
+Tests
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | addon | getUrl? | method | headers | browseEndPoint | apiPrefix |
+| X-GT-API-KEY is missing | 1 | true | 401 | Your header info is not correct, please verify it and try again | | /campaigns | | get | X-GT-API-KEY;;  ;;; | ${browseEndPoint} | /api |
+| X-GT-API-KEY contains wrong info | 2 | true | 401 | Your header info is not correct, please verify it and try again | | /campaigns | | get | X-GT-API-KEY;;mmtest  ;;; | ${browseEndPoint} | /api |
+| X-GT-API-KEY is empty string | 3 | true | 401 | Your header info is not correct, please verify it and try again | | /campaigns | | get | X-GT-API-KEY;;  ;;; | ${browseEndPoint} | /api |
+| X-GT-USER-ID is missing | 4 | true | 401 | Your header info is not correct, please verify it and try again | | /campaigns | | get | X-GT-USER-ID;;  ;;; | ${browseEndPoint} | /api |
+| X-GT-USER-ID is empty | 5 | true | 401 | Your header info is not correct, please verify it and try again | | /campaigns | | get | X-GT-USER-ID;;  ;;; | ${browseEndPoint} | /api |
+| X-GT-USER-ID is string | 6 | true | 401 | Your header info is not correct, please verify it and try again | | /campaigns | | get | X-GT-USER-ID;;abcde  ;;; | ${browseEndPoint} | /api |
+| X-GT-USER-ID doesn't exist | 7 | true | 401 | Your header info is not correct, please verify it and try again | | /campaigns | | get | X-GT-USER-ID;;9999999999999999;;; | ${browseEndPoint} | /api |
+| X-GT-ACCOUNT-ID is missing | 8 | true | 401 | Your header info is not correct, please verify it and try again | | /campaigns | | get | X-GT-ACCOUNT-ID;;  ;;; | ${browseEndPoint} | /api |
+| X-GT-ACCOUNT-ID is empty | 9 | true | 401 | Your header info is not correct, please verify it and try again | | /campaigns | | get | X-GT-ACCOUNT-ID;;  ;;; | ${browseEndPoint} | /api |
+| X-GT-ACCOUNT-ID is a string | 10 | true | 401 | Your header info is not correct, please verify it and try again | | /campaigns | | get | X-GT-ACCOUNT-ID;;abcde  ;;; | ${browseEndPoint} | /api |
+| X-GT-ACCOUNT-ID belongs to different tenant | 11 | true | 401 | Your header info is not correct, please verify it and try again | | /campaigns | | get | X-GT-ACCOUNT-ID;;166552;;; | ${browseEndPoint} | /api |
+| X-GT-ACCOUNT-ID doesn't exist | 12 | true | 401 | Your header info is not correct, please verify it and try again | | /campaigns | | get | X-GT-ACCOUNT-ID;;99999999999;;; | ${browseEndPoint} | /api |
+| default headers | 13 | true | 200 | | | /campaigns | | get | | ${browseEndPoint} | /api |
+| default headers - explicit | 14 | true | 200 | | | /campaigns | | get | X-GT-USER-ID;;45475;;;X-GT-ACCOUNT-ID;;189684;;;X-GT-API-KEY;;test123 | ${browseEndPoint} | /api |

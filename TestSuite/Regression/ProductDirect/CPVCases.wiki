@@ -1,0 +1,21 @@
+---
+Test
+---
+!define CPV_USER {cpv2_u5}
+
+!| com.groundtruth.test.Atlantic.Requestor.AdRequestor|${atlanticServerQA}                                                                                                                                                                                                                              |
+|testTitle                                            |getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|getImpressionLink?|timeout         |browseEndPoint   |prefix   |key   |latitude  |longitude  |zip  |appId        |o_fmt    |size  |pt |carrier|os     |uidType|uid        |
+|build Curl for tests                                 |true          |200               |90598895     |235938        |$curl=    |$impressionLink=  |${timeoutEnigma}|${browseEndPoint}|${prefix}|${key}|42.1564599|-71.9639993|98101|skout_android|html5,exp|320x50|app|Wifi   |Android|idfa   |${CPV_USER}|
+
+!3 Ad Request field verificatoin
+!| com.groundtruth.test.Atlantic.Requestor.EnigmaEventsLogRequestor|${atlanticServerQA}                                                                                                                |
+|testTitle                                                         |testId|getEnigmaEventsLog?|getFieldValue?|getAdGroupId?|getCampaignId?|timeout         |fieldToCheck                         |curl |
+|Fire adrequest, verify lat                    --> Should return ad|1     |true               |42.15652      |90598895     |235938        |${timeoutEnigma}|AdUserProfile.lat                    |$curl|
+|Fire adrequest, verify lng                    --> Should return ad|2     |true               |-71.96414     |90598895     |235938        |${timeoutEnigma}|AdUserProfile.lng                    |$curl|
+|Fire adrequest, verify brand_id               --> Should return ad|3     |true               |25            |90598895     |235938        |${timeoutEnigma}|AdUserProfile.brand_id               |$curl|
+|Fire adrequest, verify is_repeated_brand_visit--> Should return ad|4     |true               |false         |90598895     |235938        |${timeoutEnigma}|AdUserProfile.is_repeated_brand_visit|$curl|
+|Fire adrequest, verify is_repeated_cat_visit  --> Should return ad|5     |true               |false         |90598895     |235938        |${timeoutEnigma}|AdUserProfile.is_repeated_cat_visit  |$curl|
+|Fire adrequest, verify is_poly                --> Should return ad|6     |true               |false             |90598895     |235938        |${timeoutEnigma}|AdUserProfile.is_poly                |$curl|
+|Fire adrequest, verify is_employee            --> Should return ad|7     |true               |false         |90598895     |235938        |${timeoutEnigma}|AdUserProfile.is_employee            |$curl|
+|Fire adrequest, verify is_open                --> Should return ad|8     |true               |true          |90598895     |235938        |${timeoutEnigma}|AdUserProfile.is_open                |$curl|
+|Fire adrequest, verify ha_match               --> Should return ad|9     |true               |true          |90598895     |235938        |${timeoutEnigma}|AdUserProfile.ha_match               |$curl|

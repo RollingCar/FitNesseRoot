@@ -1,0 +1,11 @@
+---
+Test
+---
+!|com.groundtruth.test.Rti.RTIRequestor                                                                                                                                                                                                                                       |
+|testTitle |testId|getResults?|getUrl?|getBody?|getEcode?|method|Headers                       |browseEndPoint   |apiPrefix|adgroup|tenant_id|campaign_id|adgroup_id|adomain|target_profiles                                                                                  |
+|connection|2     |           |       |        |         |post  |Content-Type;;application/json|${browseEndPoint}|${prefix}|54033  |0        |2          |2         |abc    |[        {           "exclude":false,         "type":14,         "constraints":"gb_74"      }   ]|
+
+
+!|com.groundtruth.test.Rti.RTIRequestor                                                                                                                                                                                                                                       |
+|testTitle |testId|getResults?|getUrl?|getBody?|getEcode?|method|Headers                       |browseEndPoint   |apiPrefix|adgroup|tenant_id|campaign_id|adgroup_id|adomain|target_profiles                                                                                  |
+|connection|2     |           |       |        |         |post  |Content-Type;;application/json|${browseEndPoint}|${prefix}|54033  |0        |2          |2         |abc    |[        {           "exclude":false,         "type":14,         "constraints":"gb_74"      }   ]|

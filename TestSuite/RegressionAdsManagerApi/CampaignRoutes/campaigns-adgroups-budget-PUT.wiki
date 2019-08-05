@@ -1,0 +1,83 @@
+---
+Test
+---
+## Hard-coded test data
+
+| com.groundtruth.test.Util.Gadget.TimeGetter |
+| getDate? | daysToAdd | hoursToAdd | minutesToAdd |
+| $Today= | | -7 | |
+| $After_7Days= | 7 | -7 | |
+| $Yesterday= | -1 | -7 | |
+
+## Setup Test Data
+
+!3 Test setup
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | payload |
+| create campaign to be deleted | TS-1 | true | 200 | $deletedCampaignId= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Deleted Campaign"} |
+| create active campaign | TS-2 | true | 200 | $activeCampaignId= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Active Campaign"} |
+| create active campaign with deleted adgroup | TS-3 | true | 200 | $activeCampaignIdDeletedAdgroup= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Campaign with Deleted Adgroup"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | campaignId | payload |
+| add adgroup to campaign to be deleted | TS-4 | true | 200 | $adgroupInDeletedCampaign= | | post | | ${browseEndPoint} | /api | /adgroups | $deletedCampaignId | {"name":"Adgroup in Deleted Campaign"} |
+| add adgroup to active campaign | TS-5 | true | 200 | $activeAdgroupId= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId | {"name":"Adgroup in Active Campaign"} |
+| add adgroup to be deleted | TS-6 | true | 200 | $deletedAdgroupId= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignIdDeletedAdgroup | {"name":"Adgroup to be deleted"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete campaign to be deleted | TS-7 | true | 200 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId |
+| delete adgroup to be deleted | TS-8 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignIdDeletedAdgroup | $deletedAdgroupId |
+
+## Test PUT
+
+!3 Tests
+| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | addon | getBid_type? | getBudget? | getDay_parting? | getBid_price? | getStart_date? | getEnd_date? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | payload |
+| cpm bid, no day parting | 1 | true | 200 | | /budget | cpm | 100.0 | | 3.5 | $Today | $After_7Days | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| cpc bid, no day parting | 2 | true | 400 | Input payload validation failed | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpc", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| cpm bid, day parting | 3 | true | 200 | | /budget | cpm | 100.0 | 1,2,3,4,5,6,7 | 3.5 | $Today | $After_7Days | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[[1], [2], [3],[4],[5],[6],[7]]} |
+| no bid_type given | 4 | true | 400 | Input payload validation failed | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| end_date < start_date | 5 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpc", "end_date": "$Yesterday", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| start_date < today | 6 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Yesterday", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| no end_date | 7 | true | 400 | Input payload validation failed | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm",  "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| no budget | 8 | true | 400 | Input payload validation failed | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":"", "bid_price":3.5, "day_parting":[]} |
+| day_parting block omitted | 9 | true | 400 | Input payload validation failed | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5} |
+| day_parting hour = 1 | 10 | true | 200 | | /budget | cpm | 100.0 | 1,2,3,4,5,6,7 | 3.5 | $Today | $After_7Days | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[[1], [2], [3],[4],[5],[6],[7]]} |
+| day_parting hour = 24 | 11 | true | 200 | | /budget | cpm | 100.0 | 24,2,3,4,5,6,7 | 3.5 | $Today | $After_7Days | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[[24], [2], [3],[4],[5],[6],[7]]} |
+| day_parting hour = 0 | 12 | true | 400 | Input payload validation failed | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[[0], [2], [3],[4],[5],[6],[7]]} |
+| day_parting_hour = -1 | 13 | true | 400 | Input payload validation failed | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[[-1], [2], [3],[4],[5],[6],[7]]} |
+| day_parting hour = 25 | 14 | true | 400 | Input payload validation failed | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[[25], [2], [3],[4],[5],[6],[7]]} |
+| day_parting has < 7 items | 15 | true | 400 | 7 items (one for each day) must exist in the list | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[[1], [2], [3],[4],[5],[6]]} |
+| day_parting has > 7 items | 16 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[[1], [2], [3],[4],[5],[6],[7],[8]} |
+| day_parting hour = 1, 14, 20 | 17 | true | 200 | | /budget | cpm | 100.0 | 1,14,20,2,3,4,5,6,7 | 3.5 | $Today | $After_7Days | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[[1, 14, 20], [2], [3],[4],[5],[6],[7]]} |
+| day_parting_hour = 9-12 | 18 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[[9-12], [2], [3],[4],[5],[6],[7]]} |
+| no bid_price given | 19 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":, "day_parting":[]} |
+| bid price < 0 | 20 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":-1, "day_parting":[]} |
+| no start_date given | 21 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| campaign deleted | 22 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $deletedCampaignId | $adgroupInDeletedCampaign | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| adgroup deleted | 23 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignIdDeletedAdgroup | $deletedAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| campaign in different account | 24 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | ${campaignInDifferentAccount} | ${adgroupInDifferentAccount} | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| campaign in different tenant | 25 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | ${campaignInDifferentTenant} | ${adgroupInDifferentTenant} | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| invalid campaign id | 26 | false | 404 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | ${invalidCampaignId} | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| campaign id doesn't exist | 27 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | ${nonexistentCampaignId} | ${nonexistentCampaignId} | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| campaign id not included | 28 | false | 404 | | /campaigns/adgroups/budget | | | | | | | | put | | ${browseEndPoint} | /api | | | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| adgroup id invalid | 29 | false | 404 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | ${invalidCampaignId} | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| adgroup id doesn't exist | 30 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | ${nonexistentCampaignId} | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| adgroup id not included | 31 | false | 404 | | /adgroups/budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| adgroup doesn't belong to campaign | 32 | true | 400 | | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $deletedAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| bid_type = cpv | 33 | true | 400 | Input payload validation failed | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpv", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":3.5, "day_parting":[]} |
+| bid_price = 0 | 34 | true | 400 | Error updating ad group budget | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":0, "day_parting":[]} |
+| bid_price < minimum | 35 | true | 400 | Error updating ad group budget | /budget | | | | | | | | put | | ${browseEndPoint} | /api | $activeCampaignId | $activeAdgroupId | {"bid_type":"cpm", "end_date": "$After_7Days", "start_date":"$Today", "budget":100, "bid_price":2.0, "day_parting":[]} |
+
+## Tear Down Test Data
+
+!3 Test Teardown
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete campaign to be deleted | TD-1 | true | 400 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |
+| delete active campaign | TD-2 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId |
+| delete campaign with deleted adgroup | TD-3 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignIdDeletedAdgroup |

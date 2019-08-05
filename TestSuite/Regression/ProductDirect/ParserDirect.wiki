@@ -1,0 +1,92 @@
+---
+Test
+---
+!3 Address 
+!|com.groundtruth.test.Atlantic.Requestor.AdRequestor              |${atlanticServerQA}                                                                                                                                                                |
+|testTitle                                                |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude |longitude          |zip  |o_fmt    |size  |pt|carrier|
+|Set Address X, query by address X --> Should return ad   |1     |true          |200               |71986        |901           |          |${browseEndPoint}|${prefix}|${key}|47.614104|-122.32837899999998|98101|html5,exp|320x50|  |Wifi   |
+|Set Address X, query by address Y --> Shouldn't return ad|2     |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.61743 |-122.297190        |98105|html5,exp|320x50|  |Wifi   |
+
+!3 Publisher 
+!|com.groundtruth.test.Atlantic.Requestor.AdRequestor                                         |${atlanticServerQA}                                                                                                                                                                  |
+|testTitle                                                                           |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude |longitude          |zip  |o_fmt    |size  |pt  |carrier|
+|Set publisher_type to 'App', query by publisher_type 'App' --> Should return ad     |3     |true          |200               |72070        |901           |          |${browseEndPoint}|${prefix}|${key}|47.61743 |-122.344452        |98121|html5,exp|320x50|app |Wifi   |
+|Set publisher_type to 'App', query by publisher_type 'Site' --> Shouldn't return ad |4     |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.61743 |-122.344452        |98121|html5,exp|320x50|site|Wifi   |
+|Set publisher_type to 'Site', query by publisher_type 'Site' --> Should return ad   |5     |true          |200               |72071        |901           |          |${browseEndPoint}|${prefix}|${key}|47.630084|-122.305070        |98112|html5,exp|320x50|site|Wifi   |
+|Set publisher_type to 'Site', query by publisher_type 'App' --> Should not return ad|6     |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.621458|-122.32837899999998|98112|html5,exp|320x50|app |Wifi   |
+|Set publisher_type to 'ALL', query by publisher_type 'Site/App' --> Should return ad|7     |true          |200               |71986        |901           |          |${browseEndPoint}|${prefix}|${key}|47.614104|-122.32837899999998|98112|html5,exp|320x50|site|Wifi   |
+
+!3 badv 
+!|com.groundtruth.test.Atlantic.Requestor.AdRequestor              |${atlanticServerQA}                                                                                                                                                                               |
+|testTitle                                                |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude |longitude          |zip  |o_fmt    |size  |pt  |carrier|badv        |
+|set badv X, query by badv C - should return ad           |8     |true          |200               |90115765     |901           |          |${browseEndPoint}|${prefix}|${key}|47.741409|-122.64066000000003|98730|html5,exp|320x50|site|Wifi   |google.com  |
+|set badv X, query by badv X - should not return ad       |9     |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.741409|-122.64066000000003|98730|html5,exp|320x50|site|Wifi   |atlantic.com|
+|set badv X, query by badv blank/absent - should return ad|10    |true          |200               |90115765     |901           |          |${browseEndPoint}|${prefix}|${key}|47.741409|-122.64066000000003|98730|html5,exp|320x50|site|Wifi   |            |
+
+!3 bcat 
+!|com.groundtruth.test.Atlantic.Requestor.AdRequestor              |${atlanticServerQA}                                                                                                                                                                    |
+|testTitle                                                |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude  |longitude          |zip  |o_fmt    |size  |carrier|bcat |
+|set bcat X, query by bcat Y - should return ad           |11    |true          |200               |90115785     |901           |          |${browseEndPoint}|${prefix}|${key}|47.5870837|-122.23693129999998|98040|html5,exp|320x50|Wifi   |IAB33|
+|set bcat X, query by bcat X - should not return ad       |12    |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.5870837|-122.23693129999998|98040|html5,exp|320x50|Wifi   |IAB1 |
+|set bcat X, query by bcat blank/absent - should return ad|13    |true          |200               |90115785     |901           |          |${browseEndPoint}|${prefix}|${key}|47.5870837|-122.23693129999998|98040|html5,exp|320x50|Wifi   |     |
+
+!3 device 
+!| com.groundtruth.test.Atlantic.Requestor.AdRequestor                          |${atlanticServerQA}                                                                                                                                                                          |
+|testTitle                                                             |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude         |longitude   |zip  |o_fmt    |size  |pt |carrier|os     |
+|set device_os X, query by device_os Y - shouldn't return ad           |15    |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.65215300000001|-122.6812008|98383|html5,exp|320x50|app|Wifi   |Android|
+|set device_carrier X, query by device_carrier Y - should not return ad|16    |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.6755764       |-122.3175051|98115|html5,exp|320x50|app|Wifi   |Android|
+|set device_carrier X, query by device_carrier X - should return ad    |17    |true          |200               |72652        |901           |          |${browseEndPoint}|${prefix}|${key}|47.6755764       |-122.3175051|98115|html5,exp|320x50|app|310-090|Android|
+
+!3 banner size 
+!| com.groundtruth.test.Atlantic.Requestor.AdRequestor                                                       |${atlanticServerQA}                                                                                                                                                                           |
+|testTitle                                                                                          |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude  |longitude          |zip  |o_fmt    |size   |pt |carrier|os     |
+|Set baaner size X, banner type Y, query by banner size X and banner type Y --> Should return ad    |18    |true          |200               |72654        |901           |          |${browseEndPoint}|${prefix}|${key}|47.5666377|-122.32978559999998|98134|html5,exp|300x250|app|Wifi   |Android|
+|Set baaner size X, banner type Y, query by banner size Z and banner type Y --> Should not return ad|19    |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.5666377|-122.32978559999998|98134|html5,exp|320x50 |app|Wifi   |Android|
+
+
+!3 User 
+!| com.groundtruth.test.Atlantic.Requestor.AdRequestor        |${atlanticServerQA}                                                                                                                                                                                                                  |
+|testTitle                                           |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude  |longitude   |zip  |uid                            |uidType|gender|o_fmt    |size  |pt |carrier|os     |
+|set gender X, query by gender X --> Should return ad|21    |true          |200               |             |901           |          |${browseEndPoint}|${prefix}|${key}|47.6482671|-122.3780329|98119|d_test_store_visitation_30     |IDFA   |m     |html5,exp|320x50|app|Wifi   |Android|
+|set gender X, query by gender X --> Should return ad|22    |true          |200               |             |901           |          |${browseEndPoint}|${prefix}|${key}|47.6482671|-122.3780329|98119|atlantic_test_age_2008_gender_f|IDFA   |f     |html5,exp|320x50|app|Wifi   |Android|
+|set age X, query by age Y --> Should not return ad  |24    |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.661603 |-122.333076 |98103|atlantic_test_age_2008_gender_f|IDFA   |f     |html5,exp|320x50|app|Wifi   |Android|
+#|set age X, query by age X --> Should return ad      |23    |true          |200               |72744        |901           |          |${browseEndPoint}|${prefix}|${key}|47.661603 |-122.333076 |98103|atlantic_test_age_2000_gender_m     |IDFA   |m     |html5,exp|320x50|app|Wifi   |Android|
+
+
+!3 Video 
+!|com.groundtruth.test.Atlantic.Requestor.AdRequestor                                                       |${atlanticServerQA}                                                                                                                                                                                                                                 |
+|testTitle                                                                                         |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude         |longitude          |zip  |o_fmt    |size   |vlinearity|vmin|vmax|vprotocol|vmime          |pt |carrier|os     |
+|set video duration X, video type: video, video size Z, query by X,Y,Z --> Should return ad        |25    |true          |200               |72655        |901           |          |${browseEndPoint}|${prefix}|${key}|47.60928699999999|-122.32465289999999|98104|video    |640x360|1         |15  |30  |5        |video/mp4      |app|Wifi   |Android|
+|set video duration X, video type: html5,exp , video size Z, query by X,Y,Z --> Shouldn't return ad|26    |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.60928699999999|-122.32465289999999|98104|html5,exp|640x360|1         |15  |30  |2        |video/mp4      |app|Wifi   |Android|
+|set video duration X, video type: video, video size Z, query by X,Y,Z --> Shouldn't return ad     |27    |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.60928699999999|-122.32465289999999|98104|html5,exp|640x360|1         |15  |30  |2        |video/quicktime|app|Wifi   |Android|
+
+!3 device info 
+!| com.groundtruth.test.Atlantic.Requestor.AdRequestor                             |${atlanticServerQA}                                                                                                                                                                                                                                                                                                                                                                       |
+|testTitle                                                                |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude  |longitude   |zip  |o_fmt    |size  |pt |carrier|os     |devId                                                                                                                                                                                         |paid|
+|Set device_year to 'X', query by device_year 'X' --> Should return ad    |28    |true          |200               |72773        |901           |          |${browseEndPoint}|${prefix}|${key}|37.592171 |-122.0855831|94587|html5,exp|320x50|app|Wifi   |Android|Mozilla%2F5.0%20(Linux%3B%20U%3B%20Android%202.3.6%3B%20en-us%3B%20SGH-T989%20Build%2FGINGERBREAD)%20AppleWebKit%2F533.1%20(KHTML%2C%20like%20Gecko)%20Version%2F4.0%20Mobile%20Safari%2F533.1|1   |
+|Set device_year to 'X', query by device_year 'Y' --> Should not return ad|29    |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|37.592171 |-122.0855831|94587|html5,exp|320x50|app|Wifi   |Android|                                                                                                                                                                                              |1   |
+|Set device_type to 'X', query by device_type 'Y' --> Should not return ad|35    |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.6022283|-122.2853197|98122|html5,exp|320x50|app|Wifi   |Android|Mozilla%2F5.0%20(iPhone%3B%20CPU%20OS%207_1%20like%20Mac%20OS%20X)%20AppleWebKit%2F537.51.2%20(KHTML%2C%20like%20Gecko)%20Mobile%2F11D167%20Twitter%20for%20iPhone                            |    |
+
+!3 api 
+!| com.groundtruth.test.Atlantic.Requestor.AdRequestor            |${atlanticServerQA}                                                                                                                                                                              |
+|testTitle                                               |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude  |longitude          |zip  |api|o_fmt    |size  |pt |carrier|os     |
+|Set api to 'X', query by api 'X' --> Should retun ad    |30    |true          |200               |72785        |901           |          |${browseEndPoint}|${prefix}|${key}|47.7658901|-122.36451199999999|98134|5  |html5,exp|320x50|app|Wifi   |Android|
+|Set api to 'X', query by api 'Y' --> Should not retun ad|31    |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.7658901|-122.36451199999999|98134|1  |html5,exp|320x50|app|Wifi   |Android|
+
+!3 ip
+!| com.groundtruth.test.Atlantic.Requestor.AdRequestor                            |${atlanticServerQA}                                                                                                                                                                                                                    |
+|testTitle                                                               |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude  |longitude          |zip  |ip                                       |o_fmt    |size  |pt |carrier|os     |
+|Set wifi_isp to 'X', query by wifi_isp 'X' --> Should return ad         |32    |true          |200               |72786        |901           |          |${browseEndPoint}|${prefix}|${key}|47.6482671|-122.3780329       |98119|127.0.0.1:8090                           |html5,exp|320x50|app|Wifi   |Android|
+|Set wifi_isp to 'X', query by wifi_isp 'X' --> Should return ad         |32    |true          |200               |72786        |901           |          |${browseEndPoint}|${prefix}|${key}|47.6482671|-122.3780329       |98119|ef2600:1010:b017:a061:fd9b:9771:b4ff:1872|html5,exp|320x50|app|Wifi   |Android|
+|Set wifi_isp to 'X', query by wifi_isp blank/absent --> Should return ad|33    |true          |200               |71986        |901           |          |${browseEndPoint}|${prefix}|${key}|47.614104 |-122.32837899999998|98101|                                         |html5,exp|320x50|app|Wifi   |Android|
+
+!3 Generate impression link and verify revenue
+!| com.groundtruth.test.Atlantic.Requestor.AdRequestor|${atlanticServerQA}                                                                                                                                                                                            |
+|testTitle                                   |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|getImpressionLink?|buildCurl?|browseEndPoint   |prefix   |key   |latitude |longitude          |zip  |o_fmt    |size  |pt |carrier|os     |
+|generate impression link                    |      |true          |200               |71986        |901           |$impressionLink=  |          |${browseEndPoint}|${prefix}|${key}|47.614104|-122.32837899999998|98101|html5,exp|320x50|app|Wifi   |Android|
+
+!| com.groundtruth.test.Atlantic.Requestor.EnigmaEventsLogRequestor|${atlanticServerQA}                                                                 |
+|testTitle                                                |testId|getEnigmaEventsLog?|getFieldValue?|fieldToCheck          |notificationLinkUrl|
+|generate impression link                                 |36    |true               |0.01          |AdTracking.xad_revenue|$impressionLink    |
+
+

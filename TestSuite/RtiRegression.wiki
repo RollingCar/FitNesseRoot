@@ -1,0 +1,11 @@
+---
+Suite
+---
+!contents -R2 -g -p -f -h
+
+!3 query param
+!define browseEndPoint135 {!-http://ec2-3-92-208-135.compute-1.amazonaws.com:8070-!}
+!define browseEndPoint {!-http://ec2-34-230-69-48.compute-1.amazonaws.com:8070-!}
+!define prefix {!-/getAvails?-!}
+!define prefixFull {!-/getAvailsFull?-!}
+!define prefix7Days {!-/getAvails7days?-!}

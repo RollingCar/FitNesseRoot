@@ -1,0 +1,8 @@
+---
+Test
+---
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon |
+| account has multiple campaigns | 1 | true | 200 | | get | X-GT-USER-ID;;${USuserID};;;X-GT-ACCOUNT-ID;;${USaccountMultipleCampaigns};;;X-GT-API-KEY;;${USAPIKey} | ${browseEndPoint} | /api | /campaigns |
+| account has one campaign | 2 | true | 200 | | get | X-GT-USER-ID;;${USuserID};;;X-GT-ACCOUNT-ID;;${USaccountOneCampaign};;;X-GT-API-KEY;;${USAPIKey} | ${browseEndPoint} | /api | /campaigns |
+| account has zero campaigns | 3 | true | 200 | | get | X-GT-USER-ID;;${USuserID};;;X-GT-ACCOUNT-ID;;${USaccountZeroCampaigns};;;X-GT-API-KEY;;${USAPIKey} | ${browseEndPoint} | /api | /campaigns |

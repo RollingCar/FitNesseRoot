@@ -1,0 +1,29 @@
+---
+Test
+---
+## Dynamic Dates (for start/end dates)
+
+| com.groundtruth.test.Util.Gadget.TimeGetter |
+| getDate? | daysToAdd | hoursToAdd | minutesToAdd |
+| $Today= | | -7 | |
+| $After_7Days= | 7 | -7 | |
+| $Yesterday= | -1 | -7 | |
+
+!3 Tests
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getMessage? | getStart_date? | getEnd_date? | getName? | getStatus_id? | getStatus_name? | addon | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | payload |
+| campaign post | 1 | true | 200 | $campaignId= | | $Today | $After_7Days | MM Test Auto | 1 | active | | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "MM Test Auto"} |
+| campaign post duplicate | 2 | true | 200 | $campaignId2= | | $Today | $After_7Days | MM Test Auto (1) | 1 | active | | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "MM Test Auto"} |
+| campaign post no name | 3 | true | 400 |  | Input payload validation failed | | | | | | | | post | | ${browseEndPoint} | /api | /campaigns | {} |
+| campaign post campaign name = 256 characters | 4 | true | 200 | $campaignId4= | | $Today | $After_7Days | ob473oP44Ja62nTPxxdyaVDVOojaL9W7Fb8LrW8o1lZqGCR62z47xONkmzMYwZrNyRyKTFnS57tCp300eBtCtVGfX5F1QCOYWpxR1Lr0VTTASoM5R6aemnW2TDPVQuw0MQsSOvLTlH5J1Rtd8fZ4r0As3xRsJFDcDb53DKRWqfn0Ie6oILWOQsEIxV7sTgrvfLDe7hgefIiklcLgmrknGgaRnVuZXM1eHUNDqaGHRwnPPLOLbMnpL3zJvEVIjYDg | 1 | active | | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "ob473oP44Ja62nTPxxdyaVDVOojaL9W7Fb8LrW8o1lZqGCR62z47xONkmzMYwZrNyRyKTFnS57tCp300eBtCtVGfX5F1QCOYWpxR1Lr0VTTASoM5R6aemnW2TDPVQuw0MQsSOvLTlH5J1Rtd8fZ4r0As3xRsJFDcDb53DKRWqfn0Ie6oILWOQsEIxV7sTgrvfLDe7hgefIiklcLgmrknGgaRnVuZXM1eHUNDqaGHRwnPPLOLbMnpL3zJvEVIjYDg"} |
+| campaign post campaign name > 256 characters | 5 | true | 400 |  | Input payload validation failed | | | | | | | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "ob473oP44Ja62nTPxxdyaVDVOojaL9W7Fb8LrW8o1lZqGCR62z47xONkmzMYwZrNyRyKTFnS57tCp300eBtCtVGfX5F1QCOYWpxR1Lr0VTTASoM5R6aemnW2TDPVQuw0MQsSOvLTlH5J1Rtd8fZ4r0As3xRsJFDcDb53DKRWqfn0Ie6oILWOQsEIxV7sTgrvfLDe7hgefIiklcLgmrknGgaRnVuZXM1eHUNDqaGHRwnPPLOLbMnpL3zJvEVIjYDg1"} |
+
+#| campaign post campaign name with Japanese characters | 6 | true | 200 | $campaignId6= | | $Today | $After_7Days | !-japanese: 伊豆の国市 静岡県-! | 1 | active | | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "japanese: 伊豆の国市 静岡県"} |
+
+!3 Test Teardown
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| campaign Delete | TD-1 | true | 200 | | delete | | ${browseEndPoint} | /api | $campaignId |
+| campaign Delete dupe campaign name | TD-2 | true | 200 | | delete | | ${browseEndPoint} | /api | $campaignId2 |
+| campaign Delete campaign name 256 chars | TD-3 | true | 200 | | delete | | ${browseEndPoint} | /api | $campaignId4 |
+#| campaign Delete campaign name has Japanese characters | TD-4 | true | 200 | | delete | | ${browseEndPoint} | /api | $campaignId6  |

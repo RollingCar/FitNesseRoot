@@ -1,0 +1,7 @@
+---
+Test
+---
+!3 image request
+|com.groundtruth.test.Atlantic.Requestor.DocDataRequestor                                                                                                                                                                                                                                            |
+|testTitle    |testId|getResults?|getUrl?|getStatusCode?|method|Headers                       |browseEndPoint   |apiPrefix|addon                                                                                                                                                                     |
+|image request|1     |true       |       |200           |get   |Content-Type;;application/json|${browseEndPoint}|${prefix}|l_id=A1111-257814-2678874-184997099-4339619-0-0-0&k=A77K_gGv4O02touhv2Fc7uAGeRO4Nu6Sp5nut_axkWY.&uid=9999999999&size=300x250&loc=92121&carrier=verizon&appid=android&co=US|

@@ -1,0 +1,34 @@
+---
+Test
+---
+!3 Video 
+!|com.groundtruth.test.Atlantic.Requestor.AdRequestor                                                                     |${atlanticServerQA}                                                                                                                                                                                                                       |
+|testTitle                                                                                                       |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude         |longitude          |zip  |o_fmt|size   |vlinearity|vmin|vmax|vprotocol|vmime    |pt |carrier|os     |
+|set video max_duration to value less than actual video duration --> Should not return ad                        |1     |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.60928699999999|-122.32465289999999|98104|video|640x360|1         |5   |10  |5        |video/mp4|app|Wifi   |Android|
+|set video min_duration to value greater than actual video duration --> Should not return ad                     |2     |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.60928699999999|-122.32465289999999|98104|video|640x360|1         |31  |30  |5        |video/mp4|app|Wifi   |Android|
+|set video max_duration to value greater, min_duration value less than actual video duration --> Should return ad|3     |true          |200               |72655        |901           |$curl=    |${browseEndPoint}|${prefix}|${key}|47.60928699999999|-122.32465289999999|98104|video|640x360|1         |15  |30  |5        |video/mp4|app|Wifi   |Android|
+
+!3 Negative test cases
+!|com.groundtruth.test.Atlantic.Requestor.AdRequestor|${atlanticServerQA}                                                                                                                                                                                                                            |
+|testId                                     |testTitle                              |getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|browseEndPoint   |prefix   |key   |latitude         |longitude          |zip  |o_fmt|vlinearity|vmin|vmax|vprotocol|vmime    |
+|2                                          |negative test cases, without latitude  |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|                 |-122.32465289999999|98104|video|1         |1   |30  |5        |video/mp4|
+|3                                          |negative test cases, without longitude |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.60928699999999|                   |98104|video|1         |1   |30  |5        |video/mp4|
+|5                                          |negative test cases, without o_fmt     |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.60928699999999|-122.32465289999999|98104|     |1         |1   |30  |5        |video/mp4|
+|6                                          |negative test cases, without vlinearity|false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.60928699999999|-122.32465289999999|98104|video|          |1   |30  |5        |video/mp4|
+|7                                          |negative test cases, without vmin      |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.60928699999999|-122.32465289999999|98104|video|1         |    |30  |5        |video/mp4|
+|8                                          |negative test cases, without vmax      |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.60928699999999|-122.32465289999999|98104|video|1         |1   |    |5        |video/mp4|
+|9                                          |negative test cases, without vprotocol |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.60928699999999|-122.32465289999999|98104|video|1         |1   |30  |         |video/mp4|
+|10                                         |negative test cases, without vmime     |false         |200               |             |              |          |${browseEndPoint}|${prefix}|${key}|47.60928699999999|-122.32465289999999|98104|video|1         |1   |30  |5        |         |
+
+!3 Quartile verification
+!|com.groundtruth.test.Atlantic.Requestor.DemandAccessLogRequestor|${atlanticServerQA}                                                |
+|testId                                                  |testTitle             |getDemandAccessLogs?|getFirstQuartile?|curl |
+|11                                                      |check getFirstQuartile|true                |true             |$curl|
+
+!|com.groundtruth.test.Atlantic.Requestor.DemandAccessLogRequestor|${atlanticServerQA}                                      |
+|testId                                                  |testTitle        |getDemandAccessLogs?|getMidPoint?|curl |
+|12                                                      |check getMidPoint|true                |true        |$curl|
+
+!|com.groundtruth.test.Atlantic.Requestor.DemandAccessLogRequestor|${atlanticServerQA}                                                |
+|testId                                                  |testTitle             |getDemandAccessLogs?|getThirdQuartile?|curl |
+|13                                                      |check getThirdQuartile|true                |true             |$curl|

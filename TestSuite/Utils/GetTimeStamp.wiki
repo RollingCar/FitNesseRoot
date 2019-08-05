@@ -1,0 +1,6 @@
+---
+Test
+---
+!|com.groundtruth.test.Util.Gadget.TimeGetter|
+|getTimeStamp?                               |
+|$curTimeStamp=                              |

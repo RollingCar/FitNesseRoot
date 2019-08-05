@@ -1,0 +1,7 @@
+---
+Suite
+---
+!contents -R2 -g -p -f -h
+
+!define browseEndPoint {!-http://display.xad.com-!}
+!define prefix {/rest/banner?}

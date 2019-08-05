@@ -1,0 +1,11 @@
+---
+Test
+---
+!3 Fire adrequest, verify ads returned and adm has no macros present 
+
+!|com.groundtruth.test.Atlantic.Requestor.AdRequestor                          |${atlanticServerQA}                                                                                                                                                                                                                                                                                           |
+|testTitle                                                            |testId|getAdResponse?|getHttpStatusCode?|getAdGroupId?|getCampaignId?|buildCurl?|isGetQuery|browseEndPoint   |prefix              |postId   |appPublisherName |displayManager|pt |latitude         |longitude          |zip  |o_fmt    |size  |gender|yob |keywords                                           |
+|Fire adrequest, verify adm has no macros present --> Should return ad|1     |true          |200               |>0           |901           |          |false     |${browseEndPoint}|${postPrefixMopub23}|testUser1|testAppPublisher1|mopDisplay    |app|47.60928699999999|-122.32465289999999|98104|exp,html5|320x50|m     |1977|m_age:37,interest:dating,ethnicity:african-american|
+
+
+#to do, need to parse results for adm verification

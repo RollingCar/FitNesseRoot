@@ -1,0 +1,42 @@
+---
+Test
+---
+## Setup Test Data
+
+!3 Test setup
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | payload |
+| create campaign to be deleted | TS-1 | true | 200 | $deletedCampaignId= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Deleted Campaign"} |
+| create active campaign | TS-2 | true | 200 | $activeCampaignId= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Active Campaign PUT"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete campaign to be deleted | TS-3 | true | 200 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |
+
+## Test PUT
+
+!3 Tests
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | getName? | addon | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | payload |
+| Adgroup POST:  first adgroup in campaign | 1 | true | 200 | | $firstAdgroupId= | Active Adgroup | /adgroups | | post | | ${browseEndPoint} | /api | $activeCampaignId | {"name":"Active Adgroup"} |
+| Adgroup POST:  other adgroups in campaign | 2 | true | 200 | | $secondAdgroupId= | Second Adgroup | /adgroups | | post | | ${browseEndPoint} | /api | $activeCampaignId | {"name":"Second Adgroup"} |
+| Adgroup POST:  duplicate name | 3 | true | 200 | | $duplicateNameAdgroupId= | Active Adgroup | /adgroups | | post | | ${browseEndPoint} | /api | $activeCampaignId | {"name":"Active Adgroup"} |
+| Adgroup POST:  campaign has been deleted | 4 | true | 400 | | | | /adgroups | | post | | ${browseEndPoint} | /api | $deletedCampaignId | {"name":"Adgroup in deleted campaign"} |
+| Adgroup POST:  campaign id doesn't exist | 5 | true | 400 | | | | /adgroups | | post | | ${browseEndPoint} | /api | ${nonexistentCampaignId} | {"name":"Campaign id doesn't exist"} |
+| Adgroup POST:  campaign id not given | 6 | false | 404 | | | | /campaigns/adgroups | | post | | ${browseEndPoint} | /api | $activeCampaignId | {"name":"No campaign id"} |
+| Adgroup POST:  campaign id invalid | 7 | false | 404 | | | | /adgroups | | post | | ${browseEndPoint} | /api | ${invalidCampaignId} | {"name":"Invalid campaign id"} |
+| Adgroup POST:  campaign belongs to different account | 8 | true | 400 | | | | /adgroups | | post | | ${browseEndPoint} | /api | ${campaignInDifferentAccount} | {"name":"Campaign in different account"} |
+| Adgroup POST:  campaign belongs to different tenant | 9 | true | 400 | | | | /adgroups | | post | | ${browseEndPoint} | /api | ${campaignInDifferentTenant} | {"name":"Campaign in different tenant"} |
+| Adgroup POST:  name not given | 10 | true | 400 | Input payload validation failed | | | /adgroups | | post | | ${browseEndPoint} | /api | $activeCampaignId | {"name":""} |
+| Adgroup POST:  name not given as string | 11 | true | 400 | | | | /adgroups | | post | | ${browseEndPoint} | /api | $activeCampaignId | {"name":Adgroup name not a string} |
+| Adgroup POST:  no payload given | 12 | true | 400 | | | | /adgroups | | post | | ${browseEndPoint} | /api | $activeCampaignId | |
+| Adgroup POST:  other info besides name given in payload | 13 | true | 200 | | $morePayload= | Adgroup with more payload | /adgroups | | post | | ${browseEndPoint} | /api | $activeCampaignId | {"name":"Adgroup with more payload", "status":1} |
+#| Adgroup POST:  name has Japanese characters | 14 | true | 200 | | $japaneseName= | 伊豆の国市 静岡県 | /adgroups | | post | | ${browseEndPoint} | /api | $activeCampaignId | {"name":" 伊豆の国市 静岡県"} |
+
+## Tear Down Test Data
+
+!3 Test Teardown
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete campaign to be deleted | TD-1 | true | 400 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |
+| delete active campaign | TD-2 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId |

@@ -1,0 +1,64 @@
+---
+Test
+---
+## Hard-coded test data
+
+| com.groundtruth.test.Util.Gadget.TimeGetter |
+| getDate? | daysToAdd | hoursToAdd | minutesToAdd |
+| $Today= | | -7 | |
+| $After_7Days= | 7 | -7 | |
+| $Yesterday= | -1 | -7 | |
+
+## Setup Test Data
+
+!3 Test setup
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | payload |
+| create campaign to be deleted | TS-1 | true | 200 | $deletedCampaignId= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Deleted Campaign"} |
+| create active campaign with no adgroups | TS-2 | true | 200 | $activeCampaignId1= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Active Campaign with no Adgroups"} |
+| create active campaign with deleted adgroup | TS-3 | true | 200 | $activeCampaignIdDeletedAdgroup= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Campaign with Deleted Adgroup"} |
+| create active campaign with 1 adgroup | TS-4 | true | 200 | $activeCampaignId2= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Campaign with 1 adgroup"} |
+| create active campaign with 2 adgroups | TS-5 | true | 200 | $activeCampaignId3= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Campaign with 2 adgroups"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | campaignId | payload |
+| add adgroup to campaign to be deleted | TS-6 | true | 200 | $adgroupInDeletedCampaign= | | post | | ${browseEndPoint} | /api | /adgroups | $deletedCampaignId | {"name":"Adgroup in Deleted Campaign"} |
+| add adgroup to active campaign2 | TS-7 | true | 200 | $activeAdgroupId1= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId2 | {"name":"Adgroup in Active Campaign"} |
+| add adgroup to be deleted | TS-8 | true | 200 | $deletedAdgroupId= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignIdDeletedAdgroup | {"name":"Adgroup to be deleted"} |
+| add adgroup #1 to campaign3 | TS-9 | true | 200 | $activeAdgroupId2= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId3 | {"name":"Adgroup1 in Active Campaign"} |
+| add adgroup #2 to campaign3 | TS-10 | true | 200 | $activeAdgroupId3= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId3 | {"name":"Adgroup2 in Active Campaign"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete campaign to be deleted | TS-11 | true | 200 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId |
+| delete adgroup to be deleted | TS-12 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignIdDeletedAdgroup | $deletedAdgroupId |
+
+## Test GET
+
+!3 Tests
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | campaignId |
+| Campaign Deleted | 1 | true | 400 | | | get | | ${browseEndPoint} | /api | /adgroups | $deletedCampaignId |
+| Campaign Doesn't Exist | 2 | true | 400 | | | get | | ${browseEndPoint} | /api | /adgroups | ${nonexistentCampaignId} |
+| Campaign Not Given | 3 | false | 404 | | | get | | ${browseEndPoint} | /api | /campaigns/adgroups | |
+| Invalid Campaign ID | 4 | false | 404 | | | get | | ${browseEndPoint} | /api | /adgroups | ${invalidCampaignId} |
+| Campaign In Different Account | 5 | true | 400 | | | get | | ${browseEndPoint} | /api | /adgroups | ${campaignInDifferentAccount} |
+| Campaign In Different Tenant | 6 | true | 400 | | | get | | ${browseEndPoint} | /api | /adgroups | ${campaignInDifferentTenant} |
+| Campaign with multiple adgroups | 7 | true | 200 | | | get | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId3 |
+| Campaign with 1 adgroup | 8 | true | 200 | | | get | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId2 |
+| Campaign with no adgroups | 9 | true | 200 | | | get | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId1 |
+| Campaign with deleted adgroup | 10 | true | 200 | | | get | | ${browseEndPoint} | /api | /adgroups | $activeCampaignIdDeletedAdgroup |
+
+## Tear Down Test Data
+
+!3 Test Teardown
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete campaign to be deleted | TD-1 | true | 400 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |
+| delete active campaign1 | TD-2 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId1 |
+| delete active campaign2 | TD-3 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId2 |
+| delete active campaign3 | TD-4 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId3 |
+| delete campaign with deleted adgroup | TD-5 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignIdDeletedAdgroup |

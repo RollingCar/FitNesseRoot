@@ -1,0 +1,53 @@
+---
+Test
+---
+## Dynamic Date Info
+
+| com.groundtruth.test.Util.Gadget.TimeGetter |
+| getDate? | daysToAdd | hoursToAdd | minutesToAdd |
+| $Today= | | -7 | |
+| $After_7Days= | 7 | -7 | |
+| $Yesterday= | -1 | -7 | |
+
+!3 Test Setup
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | payload |
+| create active campaign | TS-1 | true | 200 | $activeCampaignId= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Active Campaign"} |
+| create paused campaign | TS-2 | true | 200 | $pausedCampaignId= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Paused Campaign"} |
+| create campaign to be deleted | TS-3 | true | 200 | $deletedCampaignId= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Deleted Campaign"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | addon | payload |
+| set campaign to paused | TS-4 | true | 200 | $pausedCampaignId | | put | | ${browseEndPoint} | /api | $pausedCampaignId | /status | {"status": 2} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete campaign to be deleted | TS-5 | true | 200 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |
+
+!3 Tests
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | getName? | getStart_date? | getEnd_date? | getStatus_id? | getStatus_name? | addon | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | payload |
+| change status from 1 to 2 | 1 | true | 200 | | $activeCampaignId | Active Campaign | $Today | $After_7Days | 2 | paused | /status | | put | | ${browseEndPoint} | /api | $activeCampaignId | {"status":2} |
+| change status from 2 to 1 | 2 | true | 200 | | $activeCampaignId | Active Campaign | $Today | $After_7Days | 1 | active | /status | | put | | ${browseEndPoint} | /api | $activeCampaignId | {"status":1} |
+| change status from 1 to 1 | 3 | true | 400 | | | | | | | | /status | | put | | ${browseEndPoint} | /api | $activeCampaignId | {"status":1} |
+| change status from 2 to 2 | 4 | true | 400 | | | | | | | | /status | | put | | ${browseEndPoint} | /api | $pausedCampaignId | {"status":2} |
+| change status to 0 | 5 | true | 400 | | | | | | | | /status | | put | | ${browseEndPoint} | /api | $pausedCampaignId | {"status":0} |
+| change status to 3 | 6 | true | 400 | | | | | | | | /status | | put | | ${browseEndPoint} | /api | $pausedCampaignId | {"status":3} |
+| status given as string | 7 | true | 400 | | | | | | | | /status | | put | | ${browseEndPoint} | /api | $activeCampaignId | {"status":"2"} |
+| nonexistent campaign id | 8 | true | 400 | | | | | | | | /status | | put | | ${browseEndPoint} | /api | ${nonexistentCampaignId} | {"status":2} |
+| deleted campaign | 9 | true | 400 | | | | | | | | /status | | put | | ${browseEndPoint} | /api | $deletedCampaignId | {"status":2} |
+| campaign id not given | 10 | false | 404 | | | | | | | | /campaigns/status | | put | | ${browseEndPoint} | /api | | {"status":2} |
+| invalid campaign id | 11 | false | 404 | | | | | | | | /status | | put | | ${browseEndPoint} | /api | ${invalidCampaignId} | {"status":2} |
+| no status given | 12 | true | 400 | | | | | | | | /status | | put | | ${browseEndPoint} | /api | $activeCampaignId | {"status":} |
+| no payload given | 13 | true | 400 | | | | | | | | /status | | put | | ${browseEndPoint} | /api | $activeCampaignId | |
+| info instead of status given in payload | 14 | true | 400 | | | | | | | | /status | | put | | ${browseEndPoint} | /api | $activeCampaignId | {"name":"changing name instead of status"} |
+| info in addition to status given in payload | 15 | true | 200 | | $activeCampaignId | Active Campaign | $Today | $After_7Days | 2 | paused | /status | | put | | ${browseEndPoint} | /api | $activeCampaignId | {"name":"changing name and status!", "status":2} |
+| campaign belongs to different tenant | 16 | true | 400 | | | | | | | | /status | | put | | ${browseEndPoint} | /api | ${campaignInDifferentTenant} | {"status":2} |
+| campaign belongs different account | 17 | true | 400 | | | | | | | | /status | | put | | ${browseEndPoint} | /api | ${campaignInDifferentAccount} | {"status":2} |
+
+!3 Test Teardown
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete active campaign | TD-1 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId |
+| delete paused campaign | TD-2 | true | 200 | | delete | | ${browseEndPoint} | /api | $pausedCampaignId |
+| delete campaign to be deleted | TD-3 | true | 400 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |

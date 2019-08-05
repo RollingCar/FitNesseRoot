@@ -1,0 +1,25 @@
+---
+Suite
+---
+!contents -R2 -g -p -f -h
+!define browseEndPoint {!-https://ads-qa3.groundtruth.com-!}
+!define apiPrefix {/api}
+## Hard-coded test data
+
+!define expiredCampaignIdUS {252005}
+!define campaignInDifferentTenant {21079}
+!define adgroupInDifferentTenant {80150}
+!define creativeInDifferentTenant {77198}
+!define campaignInDifferentAccount {266090}
+!define adgroupInDifferentAccount {90788189}
+!define creativeInDifferentAccount {812107}
+!define invalidCampaignId {AAA@1234}
+!define nonexistentCampaignId {999999999999999999}
+!define 320x50url {https://cf.groundtruth.com/swift/2019/6/13/27f9c61b-3800-46f5-a693-d221ebdc03a5.jpg}
+!define 320x480url {https://cf.groundtruth.com/swift/2019/7/1/3857affe-3373-431b-a090-805ab52568ad.jpg}
+!define 640x400url {https://cf.groundtruth.com/cms/samples/640x400.png}
+!define USaccountMultipleCampaigns {189684}
+!define USaccountOneCampaign {206864}
+!define USaccountZeroCampaigns {195174}
+!define USAPIKey {test123}
+!define USuserID {45475}

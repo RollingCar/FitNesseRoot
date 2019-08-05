@@ -1,0 +1,75 @@
+---
+Test
+---
+## Dynamic Date
+
+| com.groundtruth.test.Util.Gadget.TimeGetter |
+| getDate? | daysToAdd | hoursToAdd | minutesToAdd |
+| $Today= | | -7 | |
+| $After_7Days= | 7 | -7 | |
+| $Yesterday= | -1 | -7 | |
+
+!3 Test setup
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | payload |
+| create campaign to be deleted | TS-1 | true | 200 | $deletedCampaignId= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Deleted Campaign"} |
+| create active campaign 1 | TS-2 | true | 200 | $activeCampaignId1= | | post | | ${browseEndPoint} | /api | /campaigns | {"name": "Active Campaign #1"} |
+| create active campaign 2 | TS-3 | true | 200 | $activeCampaignId2= | | post | | ${browseEndPoint} | /api | /campaigns | {"name":"Active Campaign #2"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | campaignId | payload |
+| add adgroup to campaign to be deleted | TS-4 | true | 200 | $adgroupInDeletedCampaign= | | post | | ${browseEndPoint} | /api | /adgroups | $deletedCampaignId | {"name":"Adgroup in Deleted Campaign"} |
+| add adgroup to active campaign 1 | TS-5 | true | 200 | $activeAdgroupId1= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId1 | {"name":"Adgroup in Active Campaign 1"} |
+| add second adgroup to campaign 1 | TS-6 | true | 200 | $activeAdgroupId2= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId1 | {"name":"Adgroup 2 in Active Campaign 1"} |
+| add adgroup to active campaign 2 | TS-7 | true | 200 | $campaign2AdgroupId= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId2 | {"name":"Adgroup in Active Campaign 2"} |
+| add adgroup to be deleted | TS-8 | true | 200 | $deletedAdgroupId= | | post | | ${browseEndPoint} | /api | /adgroups | $activeCampaignId1 | {"name":"Adgroup to be deleted"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getId? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | addon | payload |
+| add creative to campaign to be deleted | TS-9 | true | 200 | $creativeInDeletedCampaign= | | post | | ${browseEndPoint} | /api | $deletedCampaignId | $adgroupInDeletedCampaign | /creatives | {"name":"Trafficking API Test Creative", "type":"image", "size":"320x50", "banner_image_url":"${320x50url}", "click_through_url":"https://ads-qa3.groundtruth.com"} |
+| add creative to first adgroup | TS-10 | true | 200 | $creativeId1= | | post | | ${browseEndPoint} | /api | $activeCampaignId1 | $activeAdgroupId1 | /creatives | {"name":"Trafficking API Test Creative1", "type":"image", "size":"320x50", "banner_image_url":"${320x50url}", "click_through_url":"https://ads-qa3.groundtruth.com"} |
+| add creative to be deleted | TS-11 | true | 200 | $deletedCreativeId= | | post | | ${browseEndPoint} | /api | $activeCampaignId1 | $activeAdgroupId1 | /creatives | {"name":"Trafficking API Test Creative - to be deleted", "type":"image", "size":"320x50", "banner_image_url":"${320x50url}", "click_through_url":"https://ads-qa3.groundtruth.com"} |
+| add creative to second adgroup | TS-12 | true | 200 | $creativeId2= | | post | | ${browseEndPoint} | /api | $activeCampaignId1 | $activeAdgroupId2 | /creatives | {"status":{"id":2,"name":"paused"}, "external_pixel_tracker_urls":["https://www.google.com"],"end_date":"$After_7Days","click_through_url":"https://ads-qa3.groundtruth.com","size":"320x50","is_interstitial":false,"id":0, "rotation_weight":2,"frequency_cap":{"hours":2,"value":10},"external_script_tracker_urls":["https://www.groundtruth.com", "https://www.google.com"],"banner_image_url":"${320x50url}","api_type":"VPAID1","type":"image","start_date":"$Today","name":"Trafficking API Test Creative with all fields"} |
+| add creative to adgroup to be deleted | TS-13 | true | 200 | $creativeInDeletedAdgroup= | | post | | ${browseEndPoint} | /api | $activeCampaignId1 | $deletedAdgroupId | /creatives | {"name":"Trafficking API Test Creative - Deleted AG", "type":"image", "size":"320x50", "banner_image_url":"${320x50url}", "click_through_url":"https://ads-qa3.groundtruth.com"} |
+| add creative to second campaign | TS-13 | true | 200 | $creativeInCampaign2= | | post | | ${browseEndPoint} | /api | $activeCampaignId2 | $campaign2AdgroupId | /creatives | {"name":"Trafficking API Test Creative - campaign2", "type":"image", "size":"320x50", "banner_image_url":"${320x50url}", "click_through_url":"https://ads-qa3.groundtruth.com"} |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId | creativeId |
+| delete creative to be deleted | TS-14 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId1 | $activeAdgroupId1 | $deletedCreativeId |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete campaign to be deleted | TS-15 | true | 200 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |
+
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId | adgroupId |
+| delete adgroup to be deleted | TS-16 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId1 | $deletedAdgroupId |
+
+!3 Tests
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getMessage? | getId? | getName? | getStatus_id? | getStatus_name? | getType? | getApi_type? | getSize? | getStart_date? | getEnd_date? | getIs_interstitial? | getRotation_weight? | getFrequency_cap_hours? | getFrequency_cap_value? | getBanner_image_url? | getClick_through_url? | getExternal_script_tracker_urls? | getExternal_pixel_tracker_urls? | getUrl? | method | headers | browseEndPoint | apiPrefix | addon | campaignId | adgroupId | creativeId |
+| Creative GET - minimal info posted | 1 | true | 200 | | $creativeId1 | Trafficking API Test Creative1 | 1 | active | image | NONE | 320x50 | null | null | false | 1.0 | | | ${320x50url} | https://ads-qa3.groundtruth.com/ | | | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | $activeAdgroupId1 | $creativeId1 |
+| Creative GET - all info posted | 2 | true | 200 | | $creativeId2 | Trafficking API Test Creative with all fields | 2 | paused | image | VPAID1 | 320x50 | $Today | $After_7Days | false | 2.0 | 2 | 10 | ${320x50url} | https://ads-qa3.groundtruth.com/ | "https://www.groundtruth.com","https://www.google.com" | "https://www.google.com" | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | $activeAdgroupId2 | $creativeId2 |
+| Creative ID doesn't belong to campaign | 3 | true | 400 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | $campaign2AdgroupId | $creativeInCampaign2 |
+| Creative ID belongs to different adgroup | 4 | true | 400 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | $activeAdgroupId1 | $creativeInDeletedAdgroup |
+| Creative ID belongs to different tenant | 5 | true | 400 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | | ${campaignInDifferentTenant} | ${adgroupInDifferentTenant} | ${creativeInDifferentTenant} |
+| Creative ID belongs to different account | 6 | true | 400 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | | ${campaignInDifferentAccount} | ${adgroupInDifferentAccount} | ${creativeInDifferentAccount} |
+| Campaign Deleted | 7 | true | 400 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $deletedCampaignId | $adgroupInDeletedCampaign | $creativeInDeletedCampaign |
+| Invalid Campaign ID | 8 | false | 404 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | | ${invalidCampaignId} | $activeAdgroupId1 | $creativeId1 |
+| Nonexistent Campaign ID | 9 | true | 400 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | | ${nonexistentCampaignId} | $activeAdgroupId1 | $creativeId1 |
+| Campaign ID not given | 10 | false | 404 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | /campaigns/adgroups/$activeAdgroupId1/creatives/$creativeId1 | | | |
+| Adgroup Deleted | 11 | true | 400 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | $deletedAdgroupId | $creativeInDeletedAdgroup |
+| Invalid Adgroup ID | 12 | false | 404 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | ${invalidCampaignId} | $creativeId1 |
+| Nonexistent Adgroup ID | 13 | true | 400 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | ${nonexistentCampaignId} | $creativeId1 |
+| Adgroup ID not given | 14 | false | 404 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | /campaigns/$activeCampaignId1/adgroups//creatives/$creativeId1 | | | |
+| Creative Deleted | 15 | true | 400 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | $activeAdgroupId1 | $deletedCreativeId |
+| Invalid Creative ID | 16 | false | 404 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | $activeAdgroupId1 | ${invalidCampaignId} |
+| Nonexistent Creative ID | 17 | true | 400 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | | $activeCampaignId1 | $activeAdgroupId1 | ${nonexistentCampaignId} |
+| Creative ID not given | 18 | false | 404 | | | | | | | | | | | | | | | | | | | | get | | ${browseEndPoint} | /api | /campaigns/$activeCampaignId1/adgroups/$activeAdgroupId1/creatives/ | | | |
+
+!3 Test Teardown
+!| com.groundtruth.test.AdsManagerApi.AdsManagerApiRequestor |
+| testTitle | testId | getResults? | getStatusCode? | getUrl? | method | headers | browseEndPoint | apiPrefix | campaignId |
+| delete campaign to be deleted | TD-1 | true | 400 | | delete | | ${browseEndPoint} | /api | $deletedCampaignId |
+| delete active campaign1 | TD-2 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId1 |
+| delete active campaign 2 | TD-3 | true | 200 | | delete | | ${browseEndPoint} | /api | $activeCampaignId2 |
