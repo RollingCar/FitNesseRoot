@@ -3,7 +3,8 @@ Test
 ---
 !2 Get current time Stamp
 !include -c .TestSuite.Utils.GetTimeStamp
-!define prefix {/v1/sdkNearby}
+!define prefix {/v1/sdkData}
+
 
 
 !2 Tests

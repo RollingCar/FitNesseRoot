@@ -1,10 +1,10 @@
+|TestSuite.PlaceApiRegression.sdkData||21:53:43 Mon, Aug 05, 2019|
+|TestSuite.PlaceApiRegression.SdkNearbyApi||21:53:33 Mon, Aug 05, 2019|
 |TestSuite.PlaceApiRegression.DataApi||21:20:26 Mon, Aug 05, 2019|
-|TestSuite.PlaceApiRegression.SdkNearbyApi||21:01:26 Mon, Aug 05, 2019|
 |TestSuite.RtiRegression||18:06:19 Mon, Aug 05, 2019|
 |TestSuite.RtiRegression.SmokeSuite.Get7Days||17:57:20 Mon, Aug 05, 2019|
 |TestSuite.PlaceApiRegression.NearbyPoiApi||17:41:08 Mon, Aug 05, 2019|
 |TestSuite.PlaceApiRegression.PoiApi||17:40:35 Mon, Aug 05, 2019|
-|TestSuite.PlaceApiRegression.sdkData||19:03:31 Fri, Aug 02, 2019|
 |TestSuite.PlaceApiRegression.PoiRequest||19:01:03 Fri, Aug 02, 2019|
 |TestSuite.PlaceApiRegression.DataApiTest||19:00:33 Fri, Aug 02, 2019|
 |TestSuite.Regression.DataRequest.ImageRequest||18:50:05 Thu, Aug 01, 2019|
