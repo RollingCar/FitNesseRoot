@@ -2,8 +2,8 @@
 Suite
 ---
 !contents -R2 -g -p -f -h
-!define browseEndPoint {!-https://ads-qa3.groundtruth.com-!}
 !define apiPrefix {/api}
+
 ## Hard-coded test data
 
 !define expiredCampaignIdUS {252005}

@@ -2,11 +2,6 @@
 Suite
 ---
 !contents -R2 -g -p -f -h
-
-
-!define browseEndPoint {!-https://ads-qa3.groundtruth.com-!}
+!define browseEndPoint {!-https://ads-qa1.groundtruth.com-!}
 !define apiPrefix {/api}
-
-
-
 !path /media/ephemeral0/fa/Fitnesse/AdsManagerApiTesting.jar

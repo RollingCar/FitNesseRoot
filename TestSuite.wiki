@@ -9,6 +9,8 @@
 !define prefix {/rest/banner?}
 !define key {slYKZ-msM9w7oTfxfBKLA1i0sO33_kz9S1AFuGalCiuyrhnGeEKa7A..}
 !define postPrefixMopub23 {/exchange/mopub23}
+
+!define timeoutEnigma {2000}
 #constant vars
 
 #!define Today {!today (yyyy-MM-dd)}
